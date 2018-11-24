@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/salao/static/js/runtime~main.b4c50be1.js"
   },
   {
-    "revision": "4286c84cb7b842e881e1b51b4767a215",
+    "revision": "5051b637a55f02f4e28872c7748f48d4",
     "url": "/salao/index.html"
   }
 ];
