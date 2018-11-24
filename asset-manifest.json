@@ -1,6 +1,13 @@
 {
-  "main.css": "static/css/main.a1ea5be3.css",
-  "main.css.map": "static/css/main.a1ea5be3.css.map",
-  "main.js": "static/js/main.85d659fc.js",
-  "main.js.map": "static/js/main.85d659fc.js.map"
+  "main.css": "/salao/static/css/main.0c40b667.chunk.css",
+  "main.js": "/salao/static/js/main.41a61cc6.chunk.js",
+  "main.js.map": "/salao/static/js/main.41a61cc6.chunk.js.map",
+  "static/js/1.2bf37335.chunk.js": "/salao/static/js/1.2bf37335.chunk.js",
+  "static/js/1.2bf37335.chunk.js.map": "/salao/static/js/1.2bf37335.chunk.js.map",
+  "runtime~main.js": "/salao/static/js/runtime~main.b4c50be1.js",
+  "runtime~main.js.map": "/salao/static/js/runtime~main.b4c50be1.js.map",
+  "static/css/main.0c40b667.chunk.css.map": "/salao/static/css/main.0c40b667.chunk.css.map",
+  "index.html": "/salao/index.html",
+  "precache-manifest.021ed7b19ac86b3783fba4eb101b186f.js": "/salao/precache-manifest.021ed7b19ac86b3783fba4eb101b186f.js",
+  "service-worker.js": "/salao/service-worker.js"
 }
