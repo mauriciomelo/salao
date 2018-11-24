@@ -1,13 +1,13 @@
 {
   "main.css": "/salao/static/css/main.0c40b667.chunk.css",
-  "main.js": "/salao/static/js/main.41a61cc6.chunk.js",
-  "main.js.map": "/salao/static/js/main.41a61cc6.chunk.js.map",
+  "main.js": "/salao/static/js/main.7752bb00.chunk.js",
+  "main.js.map": "/salao/static/js/main.7752bb00.chunk.js.map",
   "static/js/1.2bf37335.chunk.js": "/salao/static/js/1.2bf37335.chunk.js",
   "static/js/1.2bf37335.chunk.js.map": "/salao/static/js/1.2bf37335.chunk.js.map",
   "runtime~main.js": "/salao/static/js/runtime~main.b4c50be1.js",
   "runtime~main.js.map": "/salao/static/js/runtime~main.b4c50be1.js.map",
   "static/css/main.0c40b667.chunk.css.map": "/salao/static/css/main.0c40b667.chunk.css.map",
   "index.html": "/salao/index.html",
-  "precache-manifest.8fc92a429e824551918aec396cfbe906.js": "/salao/precache-manifest.8fc92a429e824551918aec396cfbe906.js",
+  "precache-manifest.bdf32c680a429efcbac6a64ce02af7e2.js": "/salao/precache-manifest.bdf32c680a429efcbac6a64ce02af7e2.js",
   "service-worker.js": "/salao/service-worker.js"
 }
