@@ -234,7 +234,7 @@ class App extends Component {
               color="inherit"
               className={classes.flex}
             >
-              Salão
+              Salão ({process.env.REACT_APP_VERSION})
             </Typography>
 
             <Button
