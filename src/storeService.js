@@ -69,7 +69,7 @@ const StoreService = (api = googleApi) => {
     return transactions;
   };
 
-  const addAll = async transactions => {
+  const addTransactions = async transactions => {
     const gapi = await api.getSession();
 
     const params = {
@@ -112,7 +112,7 @@ const StoreService = (api = googleApi) => {
   return {
     all,
     fetchItems,
-    addAll
+    addTransactions
   };
 };
 

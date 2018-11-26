@@ -95,7 +95,7 @@ describe('StoreService', () => {
       ]
     };
 
-    await storeService.addAll(transactions);
+    await storeService.addTransactions(transactions);
 
     expect(appendMock).toBeCalledWith(expect.anything(), expectedEntry);
   });
