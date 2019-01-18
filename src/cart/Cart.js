@@ -130,9 +130,8 @@ class Cart extends Component {
     };
 
     if (field === 'item' && value) {
-      transactionToSubmit.price = this.props.items.find(
-        i => i.name === value
-      ).price || '';
+      transactionToSubmit.price =
+        this.props.items.find(i => i.name === value).price || '';
     }
 
     this.setState({ transactionToSubmit });
@@ -162,7 +161,7 @@ class Cart extends Component {
       this.showMessage();
     } catch (error) {
       this.setState({ error: error.result.error });
-    } 
+    }
   };
 
   lastTransactions = () => {
@@ -295,6 +294,16 @@ class Cart extends Component {
                 control={<Radio color="primary" />}
                 label="Victor"
               />
+              <FormControlLabel
+                value="Danúbia"
+                control={<Radio color="primary" />}
+                label="Danúbia"
+              />
+              <FormControlLabel
+                value="Samuel"
+                control={<Radio color="primary" />}
+                label="Samuel"
+              />
             </RadioGroup>
           </FormControl>
 
@@ -312,7 +321,7 @@ class Cart extends Component {
               onChange={this.handleChange('commisson')}
             >
               <FormControlLabel
-                value="20"
+                value="15"
                 control={
                   <Radio
                     color="primary"
@@ -321,12 +330,23 @@ class Cart extends Component {
                     }}
                   />
                 }
+                label="15%"
+              />
+              <FormControlLabel
+                value="20"
+                control={<Radio color="primary" />}
                 label="20%"
               />
+
               <FormControlLabel
                 value="30"
                 control={<Radio color="primary" />}
                 label="30%"
+              />
+              <FormControlLabel
+                value="40"
+                control={<Radio color="primary" />}
+                label="40%"
               />
             </RadioGroup>
           </FormControl>
