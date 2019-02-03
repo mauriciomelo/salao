@@ -24,6 +24,7 @@ import 'moment/locale/pt-br';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import authService from '../authService';
+import { TransactionList } from './TransactionList';
 
 moment().locale('pt');
 
@@ -195,6 +196,7 @@ class Cart extends Component {
         </Button>
       );
     }
+
     return (
       <div className="App">
         <AppBar position="fixed">
@@ -446,20 +448,7 @@ class Cart extends Component {
           Últimas vendas
         </Typography>
 
-        <List>
-          {this.lastTransactions().map((transaction, index) => (
-            <ListItem key={index}>
-              <ListItemText
-                primary={`${transaction.item} por ${
-                  transaction.employee
-                } ${moment(
-                  transaction.date,
-                  'DD/MM/YYYY h:mm:ss'
-                ).calendar()} `}
-              />
-            </ListItem>
-          ))}
-        </List>
+        <TransactionList transactions={this.lastTransactions()} />
 
         <Snackbar
           anchorOrigin={{
