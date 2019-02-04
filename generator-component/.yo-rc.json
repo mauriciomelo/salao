@@ -1,0 +1,9 @@
+{
+  "generator-node": {
+    "promptValues": {
+      "authorName": "Mauricio Melo",
+      "authorEmail": "mauricioltw@gmail.com",
+      "authorUrl": ""
+    }
+  }
+}

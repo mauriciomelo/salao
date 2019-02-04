@@ -25,6 +25,8 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "storybook": "start-storybook -p 9009 -s public",
+    "precomponent": "cd generator-component && npm link",
+    "component": "yo component",
     "build-storybook": "build-storybook -s public"
   },
   "devDependencies": {
@@ -36,7 +38,8 @@
     "babel-loader": "8.0.4",
     "gh-pages": "^1.2.0",
     "jest-dom": "^3.0.1",
-    "react-testing-library": "^5.4.4"
+    "react-testing-library": "^5.4.4",
+    "yo": "^2.0.5"
   },
   "browserslist": [
     ">0.2%",

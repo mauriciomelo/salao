@@ -1,0 +1,5 @@
+{
+  "name": "<%= componentName %>",
+  "private": true,
+  "main": "./<%= componentName %>.js"
+}
