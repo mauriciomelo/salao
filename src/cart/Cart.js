@@ -38,20 +38,20 @@ const styles = theme => ({
     flexGrow: 1
   },
   textField: {
-    marginBottom: theme.spacing.unit,
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
+    marginBottom: theme.spacing(1),
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
     width: '100%'
   },
   title: {
     marginTop: 40,
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1)
   },
   submit: {
-    marginTop: theme.spacing.unit,
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
+    marginTop: theme.spacing(1),
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
     width: '100%'
   },
   menu: {
@@ -199,7 +199,7 @@ class Cart extends Component {
         <AppBar position="fixed">
           <Toolbar>
             <Typography
-              variant="title"
+              variant="subtitle1"
               color="inherit"
               className={classes.flex}
             >
@@ -223,7 +223,6 @@ class Cart extends Component {
           <FormControl required className={classes.textField}>
             <InputLabel htmlFor="item">Item</InputLabel>
             <Select
-              native
               value={this.state.transactionToSubmit.item}
               onChange={this.handleChange('item')}
               name="item"
@@ -441,7 +440,11 @@ class Cart extends Component {
             Salvar
           </Button>
         </form>
-        <Typography variant="title" color="inherit" className={classes.title}>
+        <Typography
+          variant="subtitle1"
+          color="inherit"
+          className={classes.title}
+        >
           Últimas vendas
         </Typography>
 
