@@ -1,0 +1,1 @@
+{"version":3,"sources":["/Users/mauricio/Projects/salao/src/index.css","/Users/mauricio/Projects/salao/src/App.css"],"names":[],"mappings":"AAAA,KACE,QAAS,CACT,SAAU,CACV,sBACF,CCJA,KACE,eAAgB,CAChB,YACF","file":"main.b621a43d.chunk.css","sourcesContent":["body {\n  margin: 0;\n  padding: 0;\n  font-family: sans-serif;\n}\n",".App {\n  margin-top: 50px;\n  padding: 20px;\n}\n"]}
