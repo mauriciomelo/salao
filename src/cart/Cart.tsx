@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, SyntheticEvent } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Select from '@material-ui/core/NativeSelect';
@@ -15,53 +15,58 @@ import FormLabel from '@material-ui/core/FormLabel';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-import * as R from 'ramda';
 import moment from 'moment';
 import 'moment/locale/pt-br';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import {
+  withStyles,
+  Theme,
+  createStyles,
+  WithStyles
+} from '@material-ui/core/styles';
 import authService from '../authService';
 import { TransactionList } from './TransactionList';
+import { pathOr, flip, repeat, assoc, dissoc, compose } from 'ramda';
 
 moment().locale('pt');
 
-const styles = theme => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap'
-  },
-  group: {
-    display: 'flex',
-    flexDirection: 'row'
-  },
-  flex: {
-    flexGrow: 1
-  },
-  textField: {
-    marginBottom: theme.spacing(1),
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: '100%'
-  },
-  title: {
-    marginTop: 40,
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1)
-  },
-  submit: {
-    marginTop: theme.spacing(1),
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: '100%'
-  },
-  menu: {
-    width: 200
-  },
-  progressWrapper: {
-    marginTop: '30%',
-    textAlign: 'center'
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    container: {
+      display: 'flex',
+      flexWrap: 'wrap'
+    },
+    group: {
+      display: 'flex',
+      flexDirection: 'row'
+    },
+    flex: {
+      flexGrow: 1
+    },
+    textField: {
+      marginBottom: theme.spacing(1),
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      width: '100%'
+    },
+    title: {
+      marginTop: 40,
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1)
+    },
+    submit: {
+      marginTop: theme.spacing(1),
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      width: '100%'
+    },
+    menu: {
+      width: 200
+    },
+    progressWrapper: {
+      marginTop: '30%',
+      textAlign: 'center'
+    }
+  });
 
 const DEFAULT_TRANSACTION = {
   employee: '',
@@ -75,10 +80,43 @@ const DEFAULT_TRANSACTION = {
   date: moment().format('YYYY-MM-DDThh:mm')
 };
 
-class Cart extends Component {
-  state = {
+interface Item {
+  name: string;
+  price: string;
+}
+
+interface Transaction {
+  employee: string;
+  item: string;
+  price: string;
+  client: string;
+  gender: string;
+  commisson: string;
+  paymentStatus: string;
+  quantity: number;
+  date: string;
+}
+
+interface CartProps extends WithStyles<typeof styles> {
+  items: Item[];
+  transactions: Transaction[];
+  isLoading: boolean;
+  onCreate: Function;
+}
+
+interface CartState {
+  error: Error | null;
+  isMessageOpen: boolean;
+  isSignedIn?: boolean;
+  isLoading?: boolean;
+  transactionToSubmit: Transaction;
+}
+
+class Cart extends Component<CartProps, CartState> {
+  state: CartState = {
     transactionToSubmit: DEFAULT_TRANSACTION,
-    isMessageOpen: false
+    isMessageOpen: false,
+    error: null
   };
 
   async componentDidMount() {
@@ -91,7 +129,7 @@ class Cart extends Component {
     this.setState({ isMessageOpen: true });
   };
 
-  handleClose = (event, reason) => {
+  handleClose = (event?: SyntheticEvent, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }
@@ -103,7 +141,7 @@ class Cart extends Component {
     this.setState({ transactionToSubmit: DEFAULT_TRANSACTION });
   };
 
-  updateSigninStatus = isSignedIn => {
+  updateSigninStatus = (isSignedIn: boolean) => {
     this.setState({ isSignedIn });
     if (isSignedIn) {
       // TODO: Extrat this to a login component
@@ -120,35 +158,38 @@ class Cart extends Component {
     authService.signOut();
   }
 
-  handleChange = field => event => {
-    const value = event.target.value;
+  handleChange = (field: string) => (event: object) => {
+    const value = pathOr(null, ['target', 'value'], event);
     const transactionToSubmit = {
       ...this.state.transactionToSubmit,
       ...{ [field]: value }
     };
 
     if (field === 'item' && value) {
-      transactionToSubmit.price =
-        this.props.items.find(i => i.name === value).price || '';
+      const item = this.props.items.find(i => i.name === value);
+
+      transactionToSubmit.price = item ? item.price : '';
     }
 
     this.setState({ transactionToSubmit });
   };
 
-  handleSubmit = async event => {
+  handleSubmit = async (event: SyntheticEvent) => {
     event.preventDefault();
-    const repeatTransaction = R.flip(R.repeat)(
+    const repeatTransaction = flip(repeat)(
       this.state.transactionToSubmit.quantity
     );
-    const formatDate = x =>
-      R.assoc(
+    const formatDate = (transaction: Transaction) =>
+      assoc(
         'date',
-        moment(x.date, 'YYYY-MM-DDThh:mm').format('DD/MM/YYYY h:mm:ss'),
-        x
+        moment(transaction.date, 'YYYY-MM-DDThh:mm').format(
+          'DD/MM/YYYY h:mm:ss'
+        ),
+        transaction
       );
-    const toTransactions = R.compose(
+    const toTransactions = compose(
       repeatTransaction,
-      R.dissoc('quantity'),
+      dissoc('quantity'),
       formatDate
     );
     const transactions = toTransactions(this.state.transactionToSubmit);
@@ -467,7 +508,6 @@ class Cart extends Component {
               key="close"
               aria-label="Close"
               color="inherit"
-              className={classes.close}
               onClick={this.handleClose}
             >
               <CloseIcon />
@@ -478,9 +518,5 @@ class Cart extends Component {
     );
   }
 }
-
-Cart.propTypes = {
-  classes: PropTypes.object.isRequired
-};
 
 export default withStyles(styles)(Cart);
