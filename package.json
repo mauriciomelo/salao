@@ -45,6 +45,7 @@
     "gh-pages": "^1.2.0",
     "jest-dom": "^3.0.1",
     "react-testing-library": "^5.4.4",
+    "redux-devtools-extension": "^2.13.8",
     "yo": "^2.0.5"
   },
   "browserslist": {
