@@ -1,11 +1,12 @@
-import * as R from 'ramda';
 import googleApi from './googleApi';
+import { indexOf } from 'ramda';
+import { Transaction, Item } from './types';
 
 const SPREADSHEET_ID = process.env.REACT_APP_SPREADSHEET_ID;
 const FETCH_RANGE = 'entrada!A2:H';
 const INSERT_RANGE = 'entrada!A1:B';
 const FETCH_ITEMS_RANGE = 'servicos!A2:B';
-const TRANSACTIONS_COLUMNS = [
+const TRANSACTIONS_COLUMNS: Array<keyof Transaction> = [
   'employee',
   'item',
   'gender',
@@ -26,16 +27,23 @@ const StoreService = (api = googleApi) => {
       range: FETCH_RANGE
     });
 
-    const rows = spreadsheet.result.values || [];
+    const rows: Array<Array<string>> = spreadsheet.result.values || [];
 
     const transactions = rows
       .filter(row => row.some(i => i))
       .map(row => {
-        const transaction = {};
-        TRANSACTIONS_COLUMNS.forEach((col, index) => {
-          const isNumeric = col === 'price' || col === 'commisson';
-          transaction[col] = isNumeric ? Number(row[index]) : row[index];
-        });
+        const valueOf = (key: keyof Transaction): string =>
+          row[indexOf(key, TRANSACTIONS_COLUMNS)];
+        const transaction: Transaction = {
+          employee: valueOf('employee'),
+          item: valueOf('item'),
+          price: Number(valueOf('price')),
+          client: valueOf('client'),
+          gender: valueOf('gender'),
+          commisson: Number(valueOf('commisson')),
+          paymentStatus: valueOf('paymentStatus'),
+          date: valueOf('date')
+        };
 
         return transaction;
       });
@@ -43,7 +51,7 @@ const StoreService = (api = googleApi) => {
     return transactions;
   };
 
-  const fetchItems = async () => {
+  const fetchItems = async (): Promise<Item[]> => {
     const gapi = await api.getSession();
 
     const spreadsheet = await gapi.client.sheets.spreadsheets.values.get({
@@ -51,25 +59,25 @@ const StoreService = (api = googleApi) => {
       range: FETCH_ITEMS_RANGE
     });
 
-    const rows = spreadsheet.result.values || [];
+    const rows: Array<Array<string>> = spreadsheet.result.values || [];
 
-    const transactions = rows
+    const items = rows
       .filter(row => row.some(i => i))
       .map(row => {
-        const transaction = {};
-        ITEMS_COLUMNS.forEach((col, index) => {
-          const isNumeric =
-            (col === 'price' || col === 'commisson') && !R.isNil(row[index]);
-          transaction[col] = isNumeric ? Number(row[index]) : row[index];
-        });
+        const valueOf = (key: keyof Item): string =>
+          row[indexOf(key, ITEMS_COLUMNS)];
 
-        return transaction;
+        const item: Item = {
+          name: valueOf('name'),
+          price: Number(valueOf('price')) || undefined
+        };
+        return item;
       });
 
-    return transactions;
+    return items;
   };
 
-  const addTransactions = async transactions => {
+  const addTransactions = async (transactions: Transaction[]) => {
     const gapi = await api.getSession();
 
     const params = {

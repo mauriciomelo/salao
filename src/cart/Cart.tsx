@@ -26,6 +26,7 @@ import {
 import authService from '../authService';
 import { TransactionList } from './TransactionList';
 import { pathOr, flip, repeat, assoc, dissoc, compose } from 'ramda';
+import { Transaction, Item } from '../types';
 
 moment().locale('pt');
 
@@ -68,34 +69,17 @@ const styles = (theme: Theme) =>
     }
   });
 
-const DEFAULT_TRANSACTION = {
+const DEFAULT_TRANSACTION: TransactionToSubmit = {
   employee: '',
   item: '',
-  price: '',
+  price: undefined,
   client: '',
   gender: '',
-  commisson: '',
+  commisson: undefined,
   paymentStatus: '',
   quantity: 1,
   date: moment().format('YYYY-MM-DDThh:mm')
 };
-
-interface Item {
-  name: string;
-  price: string;
-}
-
-interface Transaction {
-  employee: string;
-  item: string;
-  price: string;
-  client: string;
-  gender: string;
-  commisson: string;
-  paymentStatus: string;
-  quantity: number;
-  date: string;
-}
 
 interface CartProps extends WithStyles<typeof styles> {
   items: Item[];
@@ -104,12 +88,16 @@ interface CartProps extends WithStyles<typeof styles> {
   onCreate: Function;
 }
 
+interface TransactionToSubmit extends Transaction {
+  quantity: number;
+}
+
 interface CartState {
   error: Error | null;
   isMessageOpen: boolean;
   isSignedIn?: boolean;
   isLoading?: boolean;
-  transactionToSubmit: Transaction;
+  transactionToSubmit: TransactionToSubmit;
 }
 
 class Cart extends Component<CartProps, CartState> {
@@ -168,7 +156,7 @@ class Cart extends Component<CartProps, CartState> {
     if (field === 'item' && value) {
       const item = this.props.items.find(i => i.name === value);
 
-      transactionToSubmit.price = item ? item.price : '';
+      transactionToSubmit.price = item ? item.price : undefined;
     }
 
     this.setState({ transactionToSubmit });
@@ -281,7 +269,7 @@ class Cart extends Component<CartProps, CartState> {
           </FormControl>
 
           <TextField
-            value={this.state.transactionToSubmit.price}
+            value={this.state.transactionToSubmit.price || ''}
             label="Preço"
             type="number"
             onChange={this.handleChange('price')}
@@ -356,7 +344,7 @@ class Cart extends Component<CartProps, CartState> {
               aria-label="commisson"
               name="commisson"
               className={classes.group}
-              value={this.state.transactionToSubmit.commisson}
+              value={`${this.state.transactionToSubmit.commisson}`}
               onChange={this.handleChange('commisson')}
             >
               <FormControlLabel

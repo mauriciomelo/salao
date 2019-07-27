@@ -2,9 +2,9 @@ import * as R from 'ramda';
 
 import StoreService from './storeService';
 
-let storeService;
-let getMock;
-let appendMock;
+let storeService: any;
+let getMock: jest.Mock;
+let appendMock: jest.Mock;
 
 describe('StoreService', () => {
   beforeEach(() => {
@@ -77,15 +77,6 @@ describe('StoreService', () => {
         date: '15/07/2018 03:12:00'
       }
     ];
-
-    'employee',
-      'item',
-      'gender',
-      'price',
-      'paymentStatus',
-      'client',
-      'commisson',
-      'date';
 
     const expectedEntry = {
       majorDimension: 'ROWS',
