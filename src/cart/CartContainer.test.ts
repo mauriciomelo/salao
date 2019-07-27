@@ -1,5 +1,5 @@
 import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import thunk, { ThunkMiddleware } from 'redux-thunk';
 import {
   fetchTransactions,
   fetchTransactionsSuccess,
@@ -9,30 +9,61 @@ import {
   transactionsReducer,
   itemsReducer,
   loadingReducer,
-  types,
   startLoading,
   finishLoading
 } from './CartContainer';
+import { Transaction, Item, NoAction, AppState, AppActions } from '../types';
+import {
+  FETCH_TRANSACTIONS_SUCCESS,
+  FETCH_ITEMS_SUCCESS,
+  START_LOADING,
+  FINISH_LOADING,
+  NO_ACTION
+} from '../constants';
 
-const middlewares = [thunk];
+const middlewares = [thunk as ThunkMiddleware<AppState, AppActions>];
 const mockStore = configureMockStore(middlewares);
 
 jest.mock('../storeService');
 
+const buildTransaction = (overwrite?: Partial<Transaction>): Transaction => {
+  return {
+    employee: '',
+    item: '',
+    price: 0,
+    client: '',
+    gender: '',
+    commisson: 0,
+    paymentStatus: '',
+    date: '',
+    ...overwrite
+  };
+};
+
+const buildItem = (overwrite?: Partial<Item>): Item => {
+  return {
+    name: '',
+    price: 0,
+    ...overwrite
+  };
+};
+
+const noAction: NoAction = { type: NO_ACTION };
+
 describe('actions', () => {
   it('creates an action to fetch transactions', () => {
-    const transaction = { price: 42 };
+    const transaction: Transaction = buildTransaction({ price: 42 });
     const expectedAction = {
-      type: types.FETCH_TRANSACTIONS_SUCCESS,
-      payload: transaction
+      type: FETCH_TRANSACTIONS_SUCCESS,
+      payload: [transaction]
     };
-    expect(fetchTransactionsSuccess(transaction)).toEqual(expectedAction);
+    expect(fetchTransactionsSuccess([transaction])).toEqual(expectedAction);
   });
 
   it('creates an action to fetch items', () => {
-    const items = jest.fn();
+    const items = [buildItem()];
     const expectedAction = {
-      type: types.FETCH_ITEMS_SUCCESS,
+      type: FETCH_ITEMS_SUCCESS,
       payload: items
     };
     expect(fetchItemsSuccess(items)).toEqual(expectedAction);
@@ -40,14 +71,14 @@ describe('actions', () => {
 
   it('creates an action to start loadind', () => {
     const expectedAction = {
-      type: types.START_LOADING
+      type: START_LOADING
     };
     expect(startLoading()).toEqual(expectedAction);
   });
 
   it('creates an action to finish loadind', () => {
     const expectedAction = {
-      type: types.FINISH_LOADING
+      type: FINISH_LOADING
     };
     expect(finishLoading()).toEqual(expectedAction);
   });
@@ -55,7 +86,7 @@ describe('actions', () => {
 
 describe('async actions', () => {
   it('creates FETCH_TRANSACTIONS_SUCCESS when fetching has been done', () => {
-    const transactions = [{ price: 42 }];
+    const transactions = [buildTransaction({ price: 42 })];
     const expectedActions = [
       startLoading(),
       fetchTransactionsSuccess(transactions),
@@ -78,7 +109,7 @@ describe('async actions', () => {
   });
 
   it('creates FETCH_TRANSACTIONS_SUCCESS when new transactions are created', () => {
-    const transactions = [{ price: 42 }];
+    const transactions = [buildTransaction({ price: 42 })];
     const expectedActions = [
       startLoading(),
       fetchTransactionsSuccess(transactions),
@@ -104,7 +135,7 @@ describe('async actions', () => {
   });
 
   it('creates FETCH_ITEMS_SUCCESS when fetching has been done', () => {
-    const items = [{ price: 42 }];
+    const items = [buildItem({ price: 42 })];
     const expectedActions = [fetchItemsSuccess(items)];
     const store = mockStore({ items: [] });
 
@@ -116,7 +147,7 @@ describe('async actions', () => {
       storeServiceInstanceMock
     );
 
-    return store.dispatch(fetchItems(items)).then(() => {
+    return store.dispatch(fetchItems()).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -124,11 +155,11 @@ describe('async actions', () => {
 
 describe('transactions reducer', () => {
   it('returns the initial state', () => {
-    expect(transactionsReducer(undefined, {})).toEqual([]);
+    expect(transactionsReducer(undefined, startLoading())).toEqual([]);
   });
 
   it('handles FETCH_TRANSACTIONS_SUCCESS', () => {
-    const transactions = [{ price: 42 }];
+    const transactions = [buildTransaction({ price: 42 })];
     const state = transactionsReducer(
       [],
       fetchTransactionsSuccess(transactions)
@@ -139,11 +170,11 @@ describe('transactions reducer', () => {
 
 describe('items reducer', () => {
   it('returns the initial state', () => {
-    expect(itemsReducer(undefined, {})).toEqual([]);
+    expect(itemsReducer(undefined, startLoading())).toEqual([]);
   });
 
   it('handles FETCH_ITEMS_SUCCESS', () => {
-    const items = [{ price: 42 }];
+    const items = [buildItem({ price: 42 })];
     const state = itemsReducer([], fetchItemsSuccess(items));
     expect(state).toEqual(items);
   });
@@ -151,16 +182,16 @@ describe('items reducer', () => {
 
 describe('loading reducer', () => {
   it('returns the initial state', () => {
-    expect(loadingReducer(undefined, {})).toEqual(false);
+    expect(loadingReducer(undefined, noAction)).toEqual(false);
   });
 
   it('handles START_LOADING', () => {
-    const isLoading = loadingReducer(null, startLoading());
+    const isLoading = loadingReducer(false, startLoading());
     expect(isLoading).toEqual(true);
   });
 
   it('handles FINISH_LOADING', () => {
-    const isLoading = loadingReducer(null, finishLoading());
+    const isLoading = loadingReducer(true, finishLoading());
     expect(isLoading).toEqual(false);
   });
 });

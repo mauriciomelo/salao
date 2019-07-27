@@ -2,7 +2,8 @@ import {
   START_LOADING,
   FETCH_TRANSACTIONS_SUCCESS,
   FINISH_LOADING,
-  FETCH_ITEMS_SUCCESS
+  FETCH_ITEMS_SUCCESS,
+  NO_ACTION
 } from './constants';
 import rootReducer from './rootReducer';
 export interface Item {
@@ -30,6 +31,9 @@ export type AppState = ReturnType<typeof rootReducer>;
 export interface StartLoading {
   type: typeof START_LOADING;
 }
+export interface NoAction {
+  type: typeof NO_ACTION;
+}
 
 export interface FetchTransactionsSuccess {
   type: typeof FETCH_TRANSACTIONS_SUCCESS;
@@ -49,4 +53,5 @@ export type AppActions =
   | StartLoading
   | FinishLoading
   | FetchItemsSuccess
+  | NoAction
   | FetchTransactionsSuccess;

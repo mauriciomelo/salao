@@ -18,6 +18,7 @@ import {
   FETCH_TRANSACTIONS_SUCCESS,
   FETCH_ITEMS_SUCCESS
 } from '../constants';
+import { ThunkDispatch } from 'redux-thunk';
 
 export const startLoading = (): StartLoading => ({
   type: START_LOADING
@@ -40,7 +41,7 @@ export const fetchItemsSuccess = (payload: Item[]): FetchItemsSuccess => ({
 });
 
 export const fetchTransactions = () => async (
-  dispatch: Dispatch<AppActions>
+  dispatch: ThunkDispatch<any, any, AppActions>
 ) => {
   dispatch(startLoading());
   const transactions = await StoreService().all();
@@ -49,7 +50,7 @@ export const fetchTransactions = () => async (
 };
 
 export const addTransactions = (transactions: Transaction[]) => (
-  dispatch: Dispatch<any>
+  dispatch: ThunkDispatch<any, any, AppActions>
 ) =>
   StoreService()
     .addTransactions(transactions)
@@ -104,7 +105,7 @@ const mapStateToProps = (state: AppState) => {
 };
 
 const mapDispatchToProps: MapDispatchToPropsParam<any, any> = (
-  dispatch: Dispatch<any>
+  dispatch: ThunkDispatch<any, any, AppActions>
 ) => {
   dispatch(fetchTransactions());
   dispatch(fetchItems());
